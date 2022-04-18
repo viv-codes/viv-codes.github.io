@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Intro to ZFS</title>
+
+        <link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/moon.css">
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+
+
+
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+                    <h2 style="font-size: 3.6em;">TrueNAS and the ZFS Filesystem</h2>
+                    <p>Vivian Hafener</p>
+                </section>
+                <section>
+                    <section>
+                        <h3>What is ZFS?</h3>
+                        <p style="font-size: 0.8em;">ZFS, otherwise known as the Zettabyte File System, was initially developed in 2006 by Sun microsystems in an attempt to address issues with data protection and integrity that other filesystems have. After Sun was acquired by Oracle, the OpenZFS project was started by several former Sun employees in order to continue work on the filesystem. This work was largely successful, and has resulted in one of the most advanced and versatile file systems available today.</p>
+                    </section>
+                    <section>
+                        <img src="zfsassets/zfs0.png"/>
+                        <p style="font-size: 0.5em;">Source: Aspen Systems</p>
+                    </section>
+                    <section>
+                        <img src="zfsassets/zfs1.png"/>
+                        <p style="font-size: 0.5em;">Source: Victor's Blog</p>
+                    </section>
+                    <section>
+                        <img src="zfsassets/zfs2.png"/>
+                        <p style="font-size: 0.5em;">Source: Sven and the art of computer maintinence</p>
+                    </section>
+                    <section>
+                        <img src="zfsassets/zfs3.png"/>
+                        <p style="font-size: 0.5em;">Source: Ars Technica</p>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>ZFS RAIDZ</h3>
+                        <ul>
+                            <li>Parity-based & Striped</li>
+                            <li>Intended to prevent RAID-5 write-hole
+                                <ul>
+                                    <li>Dynamic stripe width</li>
+                                    <li>Parity bit flushed simultaneously</li>                                    
+                                </ul>
+                            </li>
+                            <li>No chance of keeping data but loosing parity (disks out of sync). You either have data or you don't.</li>
+                            <li>All of this is done without special hardware: ZRAID is ONLY software RAID.</li>
+                            <li>Cheap SATA drives tend to work better than more expensive SAS or fiber drives.</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <img src="zfsassets/zfs4.png"/>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>Copy-on-Write</h3>
+                        <ul>
+                            <li>Instead of directly modifying data blocks, copies are edited instead</li>
+                            <li>Once the write is complete, pointers are adjusted to point to the new location of the block</li>
+                            <li>The old block remains in place until it is needed by the filesystem
+                                <ul>
+                                    <li>Snapshots are inexpensive</li>
+                                    <li>Filesystem works towards end of the disk before deleting anything</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </section>
+                    <section>
+                        <img src="zfsassets/cow.png"/>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h1>ZIL and SLOG</h3>
+                    </section>
+                    <section>
+                        <h2>ZIL with no SLOG</h2>
+                        <img src="zfsassets/platter-sync-zil.png"/>
+                        <p style="font-size: 0.5em;">Once 2 is recieved, data can be flushed from RAMARC to disk</p>
+                    </section>
+                    <section>
+                        <h2>ZIL with SLOG</h2>
+                        <img src="zfsassets/slog-sync-zil.png"/>
+                        <p style="font-size: 0.5em;">The presence of high-speed SLOG allows for final write to disk sooner.</p>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>Other features of ZFS</h3>
+                        <ul>
+                            <li>Virtually limitless capacity and scalability with both SSDs and HDDs</li>
+                            <li>Copy-on-Write architecture for data safety and efficient snapshotting</li>
+                            <li>Integrated software-defined RAID with checksums and validation</li>
+                            <li>High-performance transparent compression and inline deduplication</li>
+                            <li>Native encryption at the disk, pool, or dataset level</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <ul>
+                            <li>Integrated Read/Write caching with options for all-flash or hybrid pools</li>
+                            <li>Integrated with FreeBSD, Linux, and many other operating systems</li>
+                            <li>Max fs size of 256 quadrillion yobibytes (6 x 10^22 times the current size of the internet), with a max file size of 16 exbibytes.</li> 
+                            <li>2^48 files per directory, basically unlimited files per filesystem. </li>
+                        </ul>
+                    </section>
+                </section>
+                
+                <section>
+                    <h3>Sources:</h3>
+                    <ul>
+                        <li><a href="https://truenas.com/zfs">ZFS - TrueNAS</a></li>
+                        <li><a href="https://pthree.org/2012/12/13/zfs-administration-part-viii-zpool-best-practices-and-caveats/">ZFS Administration, Part VIII- Zpool Best Practices and Caveats</a></li>
+                    </ul>
+                </section>
+
+
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+
+
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
