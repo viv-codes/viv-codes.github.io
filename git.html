@@ -1,0 +1,744 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Intro to Git</title>
+
+		<link rel="stylesheet" href="/home/vivi/reveal.js/dist/reset.css">
+		<link rel="stylesheet" href="/home/vivi/reveal.js/dist/reveal.css">
+		<link rel="stylesheet" href="/home/vivi/reveal.js/dist/theme/moon.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="/home/vivi/reveal.js/plugin/highlight/monokai.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+                    <h1>Intro to git</h1>
+                    <p>Vivian Hafener</p>
+		    <p style="font-size: 0.5em;">Images from Pro Git</p>
+                </section>
+                <section>
+                    <section>
+                        <h1>What is git?</h1>
+						<p style="font-size: 0.5em;">A brief introduction to VCS</p>
+                    </section>
+					<section>
+						<img src="gitassets/0.png"/>
+						<aside class="notes">
+							basic concept of a VCS, demonstrates basic versioning
+						</aside>
+					</section>
+					<section>
+						<img src="gitassets/1.png"/>
+						<aside class="notes">
+							example of basic server-based VCS workflow
+						</aside>
+					</section>
+					<section>
+						<img src="gitassets/2.png"/>
+						<aside class="notes">
+							Distributed VCS, which provides full redundancy of the repo's full commit history in every local copy
+						</aside>
+					</section>
+                </section>
+				<section>
+					<section>
+						<h1>I. Basics of Git</h1>
+					</section>
+					<section>
+						<h3>Initialization</h3>
+						<pre><code data-trim data-noescape data-line-numbers>
+							$ mkdir mydir		# Make directory mydir
+							$ cd mydir			# Enter mydir
+							$ git init			# Initialize a git repository
+						</code></pre>
+						<p>Notice: your directory now has a .git folder</p>
+					</section>
+					<section>
+						<h3>First commit</h3>
+						<pre><code  data-trim data-noescape data-line-numbers>
+							$ echo "Hello git!" >> hello.txt	# Write text to a file
+							$ git add hello.txt					# Track file for commit
+							$ git commit 						# Commit all tracked files 
+							$ git status						# Print the current status 
+						</code></pre>
+						<p style="font-size: 0.7em">Run git status at different points in this exercise to see the different stages of a git workflow!</p>
+					</section>
+					
+				</section>
+				<section>
+					<section>
+						<h1>II. Undoing Stuff</h1>
+						<aside class="notes">
+							I'm sure you've all run in to some kind of scenario where you needed to undo a commit. Whether you committed your RIT password, deleted some file, or tracked your python venv, being able to undo in git is super useful.
+						</aside>
+					</section>
+					<section>
+						<h3>Amending commits</h3>
+						<pre><code  data-trim data-noescape data-line-numbers>
+							$ echo "Whoops, forgot this one" > forgor.txt
+							$ git add forgor.txt
+							$ git commit --amend -m "Added forgor.txt and hello.txt"
+						</code></pre>
+						<aside class="notes">
+							Amend adds additional files to a commit, and can also update the commit message
+						</aside>
+					</section>
+					<section>
+						<h3>Reverting changes before committing</h3>
+						<pre><code  data-trim data-noescape data-line-numbers>
+							$ ls
+							$ rm hello.txt
+							$ ls
+							$ git restore hello.txt
+							$ ls
+						</code></pre>
+						<aside class="notes">
+							This is useful if you make some edits, and then decide that you don't want to commit those changes and instead want to keep your last commit. 
+						</aside>
+					</section>
+					<section>
+						<h3>Reverting changes after committing</h3>
+						<pre><code  data-trim data-noescape data-line-numbers>
+							$ rm hello.txt
+							$ git add .
+							$ git commit -m "Deleted hello.txt"
+							$ ls
+
+							$ git log 
+							or 
+							$ git log --pretty=format:"%h %s" --graph
+						</code></pre>
+						<aside class="notes">
+							You've made changes, and committed them, and now want to undo that. There are several options here, and I'll go over the use cases for each one. 
+						</aside>
+					</section>
+					<section>
+						<h3>Reverting changes after committing</h3>
+						Revert public changes:
+						<pre><code  data-trim data-noescape>
+							$ git revert &#60;SHA&#62;
+						</code></pre>
+						Fix commit message typo:
+						<pre><code  data-trim data-noescape>
+							$ git commit --amend -m "&#60;Updated message&#62;"
+						</code></pre>
+						Undo local changes:
+						<pre><code  data-trim data-noescape>
+							$ git checkout -- &#60;bad filename&#62;
+						</code></pre>
+						Reset local changes:
+						<pre><code  data-trim data-noescape>
+							$ git reset &#60;last good SHA&#62; 		#safe
+							or
+							$ git reset --hard &#60;last good SHA&#62;	#unsafe
+						</code></pre>
+					</section>
+					<section>
+						<h3>Reverting changes after committing (cont.)</h3>
+						Show a log of commits you can revert to:
+						<pre><code  data-trim data-noescape>
+							$ git reflog
+						</code></pre>
+						to restore project history to commit "moment in time":
+						<pre><code  data-trim data-noescape>
+							$ git reset --hard &#60;SHA&#62;
+						</code></pre>
+						to recreate one or more files as they were at that time without altering history:
+						<pre><code  data-trim data-noescape>
+							$ git checkout &#60;SHA&#62; -- &#60;filename&#62;
+						</code></pre>
+						to replay exactly one of those commits into branch:
+						<pre><code  data-trim data-noescape>
+							$ git cherry-pick &#60;SHA&#62;
+						</code></pre>
+					</section>
+					<section>
+						<h3>Fun with git cherry-pick</h3>
+						<ul>
+							<li>In my opinion, git cherry-pick is one of the most powerful git commands.</li>
+							<li>It can be used across branches in the same repo, which makes it easier to pull individual features or changes across your project</li>
+							<li>Super helpful for package development.</li>
+						</ul>
+						<aside class="notes">
+							Talk about RC workflow here
+						</aside>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h1>III. Branches</h1>
+					</section>
+					<section>
+						<h3>Intro to branches</h3>
+						<img src="gitassets/commits.png"/>
+						<aside class="notes">
+							Branches are useful when you have multiple versions of a project that you want to work on simultaneously, like a develop, prod, and testing branch. GIVE RC EXAMPLE
+						</aside>
+					</section>
+					<section>
+						<img src="gitassets/commit-history.png"/>
+						<aside class="notes">
+							GIT AS POINTERS AND LINKS
+						</aside>
+					</section>
+					<section>
+						<pre><code  data-trim data-noescape>
+							$ git branch testing
+						</code></pre>
+						<img src="gitassets/newbranch.png"/>
+					</section>
+					<section>
+						<img src="gitassets/headmain.png"/>
+					</section>
+					<section>
+						<pre><code  data-trim data-noescape>
+							$ git checkout testing
+						</code></pre>
+						<img src="gitassets/headtesting.png"/>
+					</section>
+					<section>
+						<pre><code  data-trim data-noescape>
+							$ echo "I'm a commit on the testing branch" >> testing.txt
+							$ git commit
+						</code></pre>
+						<img src="gitassets/newcommit.png"/>
+					</section>
+					<section>
+						<pre><code  data-trim data-noescape>
+							$ git checkout master
+						</code></pre>
+						<img src="gitassets/checkout-master.png"/>
+					</section>
+					<section>
+						<h3>Divergence</h3>
+						<pre><code  data-trim data-noescape data-line-numbers>
+							$ log --oneline --decorate --graph --all
+						</code></pre>
+						<img src="gitassets/advance-master.png"/>
+						<aside class="notes">
+							You don't need to use all of these tags, but they make it pretty and easier to understand. 
+						</aside>
+					</section>
+					<section>
+						<h3>More branching</h3>
+						<img src="gitassets/basic-branching-6.png"/>
+					</section>
+					<section>
+						<h3>Merging</h3>
+						<pre><code  data-trim data-noescape data-line-numbers>
+							$ git checkout master
+							$ git merge iss53
+						</code></pre>
+						<img src="gitassets/basic-merging-1.png"/>
+					</section>
+					<section>
+						<h3>More Merging</h3>
+						<pre><code  data-trim data-noescape data-line-numbers>
+							$ git branch -d iss53
+						</code></pre>
+						<img src="gitassets/basic-merging-2.png"/>
+					</section>
+					<section>
+						<h3>Practicing merging</h3>
+						<pre><code  data-trim data-noescape data-line-numbers>
+							$ git checkout master
+							$ git merge testing
+							$ ls
+							# Note: the presence of testing.txt
+						</code></pre>
+					</section>
+					<section>
+						<h3>Resolving merge conflicts</h3>
+						<pre><code  data-trim data-noescape data-line-numbers>
+							$ git branch newbranch
+							$ git checkout newbranch
+							$ vim hello.txt 
+							# Change some of the words in hello.txt
+							$ git add .
+							$ git commit
+							$ git checkout master
+							$ vim hello.txt
+							# Change hello.txt
+							# We now have divergent history and a merge conflict
+							$ git log --graph --all
+							$ git merge newbranch
+						</code></pre>
+						You should now have a merge conflict
+					</section>
+					<section>
+						<h3>Resolving merge conflicts (cont.)</h3>
+						<pre><code  data-trim data-noescape data-line-numbers>
+							$ git status
+							# Note the message here
+							$ vim hello.txt
+							# Resolve the conflicts
+							$ git add .
+							$ git commit -m "Resolved merge conflicts"
+						</code></pre>
+						Merge conflict resolved!
+					</section>
+					<section>
+						<h3>Resolving merge conflicts (cont.)</h3>
+						<pre><code  data-trim data-noescape data-line-numbers>
+							$ git status 
+							$ git log --all --graph
+						</code></pre>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h1>IV. Rebasing</h1>
+						<h4>An alternative way of integrating divergent histories</h4>
+					</section>
+					<section>
+						<h3>Basic Rebasing</h3>
+						<img src="gitassets/basic-rebase-1.png"/>
+						<aside class="notes">
+							Here's a basic example of a divergent history, like we saw earlier. This could be solved either by merging or by rebasing, both of which have benefits and drawbacks. 
+						</aside>
+					</section>
+					<section>
+						<h3>Rebase vs. Merge</h3>
+						<pre><code  data-trim data-noescape data-line-numbers>
+							$ git checkout master 
+							$ git merge experiment
+						</code></pre>
+						<img src="gitassets/basic-rebase-2.png"/>
+						<p>Merge</p>
+						<aside class="notes">
+							Merging creates a new commit that combines both branches. 
+						</aside>
+					</section>
+					<section>
+						<h3>Basic Rebasing (cont.)</h3>
+						<pre><code  data-trim data-noescape data-line-numbers>
+							$ git checkout experiment
+							$ git rebase master
+						</code></pre>
+						<img src="gitassets/basic-rebase-3.png"/>
+						<pre><code  data-trim data-noescape data-line-numbers>
+							$ git checkout master
+							$ git merge experiment
+						</code></pre>
+						<img src="gitassets/basic-rebase-4.png"/>
+						<p>Rebase & Merge</p>
+						<aside class="notes">
+							Instead of creating one new commit that points at both histories, git rebase rewrites history and makes it look as if all commits occured on the master branch, leaving a clean branch history. Rebase has more usage than just this, which I'll go into in the next slide. 
+						</aside>
+					</section>
+					<section>
+						<h3>Complex Rebasing</h3>
+						<img src="gitassets/interesting-rebase-1.png"/>
+						<p>You have worked on client and server patches at different times, and need to apply client patches to master prior to overlaying server patches. </p>
+					</section>
+					<section>
+						<h3>Rebase client to master</h3>
+						<pre><code  data-trim data-noescape data-line-numbers>
+							$ git rebase --onto master server client
+						</code></pre>
+						<img src="gitassets/interesting-rebase-2.png"/>
+						<aside class="notes">
+							To apply your changes on client to master, you git rebase --onto master server client. This applies the changes in the client branch to master. 
+						</aside>
+					</section>
+					<section>
+						<h3>Fast forwarding Master to Client</h3>
+						<pre><code  data-trim data-noescape data-line-numbers>
+							$ git checkout master
+							$ git merge client
+						</code></pre>
+						<img src="gitassets/interesting-rebase-3.png"/>
+						<aside class="notes">
+							Next you point master at client using git merge to fast forward master to client's current position
+						</aside>
+					</section>
+					<section>
+						<h3>Rebasing server to master</h3>
+						<pre><code  data-trim data-noescape data-line-numbers>
+							$ git rebase master server
+						</code></pre>
+						<img src="gitassets/interesting-rebase-4.png"/>
+						<aside class="notes">
+							Finally, you rebase server to master to replay the changes made on the server branch on top of the current master branch. 
+						</aside>
+					</section>
+					<section>
+						<h3>Cleanup</h3>
+						<pre><code  data-trim data-noescape data-line-numbers>
+							$ git checkout master
+							$ git merge server
+							$ git branch -d client
+							$ git branch -d server
+						</code></pre>
+						<img src="gitassets/interesting-rebase-5.png"/>
+						<aside class="notes">
+							Finally, checkout master. fast forward master to server, then delete unused branches. 
+						</aside>
+					</section>
+					<section>
+						<h3>Perils of Rebasing</h3>
+						<p>When working on a project with others, do not rebase commits that exist outside of your repository and that people may have based work on. Ideally, rebase your own work off of master, then make a merge request to master, to keep everything neat.</p>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h1>V. Working with remotes</h1>
+					</section>
+					<section>
+						<h3>Configuration</h3>
+						<pre><code  data-trim data-noescape data-line-numbers>
+							$ git config --global user.name "John Doe"
+							$ git config --global user.email johndoe@example.com
+							$ git config --global core.editor vim
+							$ git config --global credential.helper store
+							$ git config --list
+						</code></pre>
+					</section>
+					<section>
+						<h3>Working with a remote repository</h3>
+						<!-- <p>Fork https://github.com/viv-codes/example on GitHub</p> -->
+						<pre><code  data-trim data-noescape data-line-numbers>
+							$ cd ~
+							$ git clone https://github.com/user.name/reponame
+							$ cd reponame										
+						</code></pre>
+					</section>
+					<section>
+						<h3>Commiting to a remote repository</h3>
+						<pre><code  data-trim data-noescape data-line-numbers>
+							$ echo "This is a new line!" >> hello.txt
+							$ git diff			# Shows difference between versions
+							$ git add .
+							$ git commit -m "Added hello.txt"
+							$ git push			# Pushes commits to upstreams
+						</code></pre>
+					</section>
+					<section>
+						<h3>Syncing with a remote repository</h3>
+						<pre><code  data-trim data-noescape data-line-numbers>
+							$ git fetch
+							$ git pull
+						</code></pre>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h1>VI. Git Tools</h1>
+					</section>
+					<section>
+						<h3>Git cherry-pick</h3>
+						<pre><code  data-trim data-noescape>
+							$ git cherry-pick &#60;SHA&#62;
+						</code></pre>
+						<p>Used to apply changes introduced by a specific commit to the current branch, and create a new commit with that change. This is useful for splitting up changes into multiple merge requests on larger projects (package development).</p>
+					</section>
+					<section>
+						<h3>Git bisect</h3>
+						<pre><code  data-trim data-noescape>
+							$ git bisect &#60;subcommand&#62; &#60;options&#62;
+							Examples:
+							$ git bisect start
+							$ git bisect good
+							$ git bisect bad
+							$ git bisect reset
+						</code></pre>
+						<p>Uses binary search to find the commit that introduced a bug by automatically checking out branches, then marking commits as 'good' or 'bad' and continuing the binary search. </p>
+					</section>
+					<section>
+						<h3>Git stash</h3>
+						<pre><code  data-trim data-noescape>
+							$ git stash				# stashes current work
+							$ git stash list	# lists available stashes
+							$ git stash apply	# applies the selected or most recent stash
+							$ git stash --all	# stash includes untracked files
+						</code></pre>
+						<p>Save current work before changing branches, without committing</p>
+					</section>
+					<section>
+						<h3>Git clean</h3>
+						<pre><code  data-trim data-noescape>
+							$ git clean
+						</code></pre>
+						<p>Removes untracked files that are not in .gitignore</p>
+					</section>
+					<section>
+						<h3>Signing Commits with GPG</h3>
+						<pre><code  data-trim data-noescape>
+							$ gpg --list-keys
+							or
+							$ gpg --gen-key
+							then
+							$ git config --global user.signkey &#60;SHA&#62;
+							$ git commit -a -S -m 'Signed commit'
+							to see and verify signatures, run:
+							$ git log --show-signature -l
+							to force git to only merge signed commits, and sign the merge:
+							$ git merge --verify-signatures -S signed-branch
+						</code></pre>
+						<p>Used to verify the integrity and source of commits</p>
+					</section>
+					<section>
+						<h3>Git add interactive mode</h3>
+						<pre><code  data-trim data-noescape>
+							$ git add -i
+           							 	staged     unstaged path
+								1:    unchanged        +0/-1 TODO
+								2:    unchanged        +1/-1 index.html
+								3:    unchanged        +5/-1 lib/simplegit.rb
+
+								*** Commands ***
+								1: [s]tatus     2: [u]pdate      3: [r]evert     4: [a]dd untracked
+								5: [p]atch      6: [d]iff        7: [q]uit       8: [h]elp
+								What now>>
+						</code></pre>
+						<pre><code  data-trim data-noescape>
+							What now>> u
+								staged     unstaged path
+								1:    unchanged        +0/-1 TODO
+								2:    unchanged        +1/-1 index.html
+								3:    unchanged        +5/-1 lib/simplegit.rb
+							Update>>
+						</code></pre>
+						<pre><code  data-trim data-noescape>
+							Update>> 1,2	# stages TODO and index.htm
+						</code></pre>
+						<p>Git interactive can also be used for more powerful operations, like staging certain parts of commits. However, that is out of the scope of this presentation. </p>
+					</section>
+					<section>
+						<h3>Debugging with git</h3>
+						<pre><code  data-trim data-noescape>
+							$ git blame -L 69, 82 Makefile # Runs git blame for lines 69-82
+						</code></pre>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h1>VII. Git Internals</h1>
+					</section>
+					<section>
+						<h3>Structure of .git directory</h3>
+						<pre><code  data-trim data-noescape>
+							[vivi@vivi-thinkpad filesort]$ cd .git && ls
+							branches        description  hooks  logs       packed-refs
+							COMMIT_EDITMSG  FETCH_HEAD   index  objects    refs
+							config          HEAD         info   ORIG_HEAD
+						</code></pre>
+						<aside class="notes">
+							Ok, so there are a lot here. We're going to go in detail into each of these, but here's a brief description. The description file is only used by GitWeb, so don't worry about that one. The config file contains your project-specific configuration options. [OPEN IT] The info directory contains a global exclude pattern, if you want something more global than a .gitignore. The hooks directory contains client- and server- side hooks. HEAD points to the branch and commit that you currently have checked out. The index file is where git stores your staging area info.  The objects directory stores all of the content for your database, refs stores pointers into commit objects in the data in objects. 
+						</aside>
+					</section>
+					<section>
+						<h3>Git Objects</h3>
+						<pre><code  data-trim data-noescape>
+							$ cd .. && git init internals && cd internals
+							$ find .git/objects
+							.git/objects
+							.git/objects/info
+							.git/objects/pack
+							$ find .git/objects -type f
+						</code></pre>
+						<pre><code  data-trim data-noescape>
+							$ echo 'test content' | git hash-object -w --stdin
+							d670460b4b4aece5915caf5c68d12f560a9fe3e4
+							$ find .git/objects -type f
+							$ git cat-file -p d670460b4b4aece5915caf5c68d12f560a9fe3e4
+						</code></pre>
+						<aside class="notes">
+							Git is a content-addressable filesystem, which means that the basis of git is just a simple key-value data store. This means you can put anything into git and get back a unique key by which to reference it. So these commands demonstrate the basics of git objects by initializing and empty repository. When you list the contents of .git/objects, you can see that the directory has info and pack directories, and no regular files. In this next step, we're manually doing what git does every time you stage a file. You're creating a new git data object, adding it to the git database (-w), and echoing the hash to the terminal. This is a SHA-1 hash, which is a checksum of the content along with a header. Now when you look for files in the git objects directory, you see that there's a folder "d6", which is the header, and a file for the remainder of the hash. 
+						</aside>
+					</section>
+					<section>
+						<h3>Git objects (cont.)</h3>
+						<pre><code  data-trim data-noescape>
+							$ echo 'version 1'> test.txt
+							$ git hash-object -w test.txt
+							83baae61804e65cc73a7201a7252750c76066a30
+							$ echo 'version 2'> test.txt
+							$ git hash-object -w test.txt
+							1f7a7a472abf3dd9643fd615f6da379c4acb3e3a
+							$ find .git/objects -type f
+							.git/objects/1f/7a7a472abf3dd9643fd615f6da379c4acb3e3a
+							.git/objects/83/baae61804e65cc73a7201a7252750c76066a30
+							.git/objects/d6/70460b4b4aece5915caf5c68d12f560a9fe3e4
+							$ rm test.txt
+							$ ls
+							$ git cat-file -p 83baae61804e65cc73a7201a7252750c76066a30 > test.txt
+							$ cat test.txt
+							version 1
+						</code></pre>
+						<aside class="notes">
+							Now when you search for files in the .git/objects directory, you can see a hash for each file is now in the objects databse. Since they're in the objects database, that means they're contained within git, and can be safely removed and recovered from your local directory. An example of this process is when you change branches, your directory is identical to the copy of that branch, while not deleting any of the files. Instead, the files are stored in the git objects directory, and can be accesses either automatically by git, or manually, like this. You can also recover the second file, like this.
+						</aside>
+					</section>
+					<section>
+						<h3>Git objects - blobs</h3>
+						<pre><code  data-trim data-noescape>
+							$ git cat-file -p 1f7a7a472abf3dd9643fd615f6da379c4acb3e3a > test.txt
+							$ cat test.txt
+							version 2
+							$ git cat-file -t 1f7a7a472abf3dd9643fd615f6da379c4acb3e3a
+							blob
+						</code></pre>
+						<aside class="notes">
+							However, it's not really practical to remember the SHA-1 hash for each version of your file. Additionally, git isn't storing the filename in it's database, just the content. This type of object is called a blob. However, when you use git, it clearly does preserve filenames. The way it does that is with trees. 
+						</aside>
+					</section>
+					<section>
+						<h3>Git objects - trees</h3>
+						<pre><code  data-trim data-noescape>
+							$ git cat-file -p master^{tree}
+							100644 blob a906cb2a4a904a152e80877d4088654daad0c859      README
+							100644 blob 8f94139338f9404f26296befa88755fc2598c289      Rakefile
+							040000 tree 99f1a6d12cb4b6f19c8655fca46c3ecf317074e0      lib
+						</code></pre>
+						<img src="gitassets/data-model-1.png"/>
+						<aside class="notes">
+							The next part of git to discuss is the tree, which is git's way of storing filenames. Git is similar to a unix filesystem, but in most ways simplified. All files in git are stored as tree and blob items, with trees corresponding to UNIX directory entries and blobs corresponding to inodes or file contents. Trees associate blob objects and subtrees with corresponding UNIX directory entries. Notice that the tree subdirectory isn't stored as a directory or a file, but rather as a pointer to another tree. I was considering adding a number of slides on manually building trees, cause it's actually not that complex, but decided that was outside of the scope of this presentation. 
+						</aside>
+					</section>
+					<!-- !TODO <section>
+						
+						<h3>DIY trees</h3>
+						<pre><code  data-trim data-noescape>
+							$ git update-index --add --cacheinfo 100644 \
+							83baae61804e65cc73a7201a7252750c76066a30 test.txt
+						</code></pre>
+						<img src="gitassets/data-model-1.png"/>
+						<aside class="notes">
+							Creating your own tree is pretty easy. 
+						</aside>
+					</section> -->
+					<section>
+						<h3>Commit objects</h3>
+						<img src="gitassets/data-model-3.png"/>
+						<aside class="notes">
+							Commit objects are how git handles pointing to different trees for different versions, along with management of the different versions of files over time. 
+						</aside>
+					</section>
+					<section>
+						<h3>Git references</h3>
+						<pre><code  data-trim data-noescape>
+							$ find .git/refs
+							.git/refs
+							.git/refs/heads
+							.git/refs/tags
+							$ find .git/refs -type f
+							$ echo "version 1" > test.txt
+							$ git add .
+							$ git commit -m
+							$ find .git/refs
+						</code></pre>
+						<pre><code  data-trim data-noescape>
+							$ echo "new file" > new.txt
+							$ echo "version 2" > test.txt
+							$ git add .
+							$ git commit -m "Second commit"
+							$ echo "newline" >> new.txt
+							$ git add .
+							$ git commit -m "Third commit"
+							$ git log #Note the hash of the second commit
+							$ git update-ref .git/refs/heads/test &#60;SHA&#62;
+							$ git checkout test
+							$ git log --pretty=oneline test
+						</code></pre>
+						<aside class="notes">
+							In git, simple names of files are called references, or refs. The files that contain those SHA-1 values can be found in the .git/refs directory. As you can see, there are no file entries here yet, but directories named heads and tags. Notice that when we commit, a new hash is created, at .git/refs/heads/master. Remember that git is just a series of pointers. In this example, you can create a branch at the second commit by doing the following. 
+						</aside>
+					</section>
+					<section>
+						<h3>References Continued</h3>
+						<img src="gitassets/data-model-4.png"/>
+					</section>
+					<section>
+						<h3>References - HEAD</h3>
+						<pre><code  data-trim data-noescape>
+							$ git checkout master
+							$ cat .git/HEAD
+							ref: refs/heads/master
+							$ git checkout test
+							$ cat .git/HEAD
+						</code></pre>
+						<pre><code  data-trim data-noescape>
+							$ git branch
+							$ git symbolic-ref HEAD refs/heads/master
+							$ git branch
+							$ git symbolic-ref HEAD refs/heads/test
+						</code></pre>
+						<aside class="notes">
+							When you run git branch, git pulls the SHA-1 of the last commit from the HEAD pointer. This is basically a simple pointer, but for safety reasons it should not be edited directly. Instead, use this command, which can also set the location of your HEAD. 
+						</aside>
+					</section>
+					<section>
+						<h3>References - Tags</h3>
+						<a>Lightweight tag</a>
+						<pre><code  data-trim data-noescape>
+							$ git update-ref refs/tags/v1.0 7e6555c92cdc44c693d1c59b2852508a15ea5c94
+						</code></pre>
+						<a>Annotated tag</a>
+						<pre><code  data-trim data-noescape>
+							$ git tag -a v1.1 51719302fa2dcc2214ec24998fb65cc36f2140fa -m 'Test tag'
+							$ cat .git/refs/tags/v1.1
+							36b2dc26dfca4a1bee1957f1e5300795efce54b1
+							$ git cat-file -p 36b2dc26dfca4a1bee1957f1e5300795efce54b1
+							object 51719302fa2dcc2214ec24998fb65cc36f2140fa
+							type commit
+							tag v1.1
+							tagger viv-codes &#60;vhafener@outlook.com&#62; 1648217953 -0400
+
+							Test tag
+						</code></pre>
+						<aside class="notes">
+							We've already discussed blobs, trees, and commits, which are git's main object types. Git also has tags, which are very similar to a commit object. However, tags point to commit objects instead of to trees. There are two types of tags, lightweight and annotates. You can make a lightweight tag using the syntax above, or an annotated tag using the one below. 
+						</aside>
+					</section>
+					<section>
+						<h3>References - remote references</h3>
+						<pre><code  data-trim data-noescape>
+							$ cat .git/refs/remotes/origin/master
+							ca82a6dff817ec66f44342007202690a93763949
+							$ git cat-file -p ca82a6dff817ec66f44342007202690a93763949
+						</code></pre>
+						<aside class="notes">
+							Git also uses references to point to remotes [use filesort and cat-file -p]
+						</aside>
+					</section>
+					<section>
+						<h1>TO BE CONTINUED</h1>
+					</section>
+					
+				</section>
+				<section>
+					<h1>Questions?</h1>
+				</section>
+                <section>
+                    <h3>Sources:</h3>
+                    <ul>
+						<li><a href="https://git-scm.com/book/en/v2/">Pro Git</a></li>
+                        <li><a href="https://github.blog/2015-06-08-how-to-undo-almost-anything-with-git/">Undoing things in Git</a></li>
+                    </ul>
+                </section>
+			</div>
+		</div>
+
+		<script src="/home/vivi/reveal.js/dist/reveal.js"></script>
+		<script src="/home/vivi/reveal.js/plugin/notes/notes.js"></script>
+		<script src="/home/vivi/reveal.js/plugin/markdown/markdown.js"></script>
+		<script src="/home/vivi/reveal.js/plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
