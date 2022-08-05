@@ -17,15 +17,98 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>
+				<section data-background-image="k8sassets/k8s-banner.jpg">
                     <h2 style="font-size: 3.6em;">Intro to Kubernetes</h2>
                     <p>Vivian Hafener</p>
                 </section>
                 <section>
+					<section>
+						<h1>What is Kubernetes?</h1>
+					</section>
                     <section>
-                        
+						<p>Kubernetes, or k8s, is an open-source system for automating deployment, scaling, and management of containerized applications.</p>
                     </section>
+					<section>
+						<p>K8s' main focus is scaling, both on a service-level and on a platform-level basis. A k8s cluster can be run on a raspberry pi, across several VMs, or on an entire datacenter. There are also cloud-based options of hosting k8s, such as Google Kubernetes Engine</p>
+					</section>
                 </section>
+				<section>
+					<section>
+						<h1>Elements of k8s</h1>
+						<h3>Basics of Cluster Architecture</h3>
+					</section>
+					<section data-background-image="k8sassets/components-of-kubernetes.svg" data-background-color="white">
+						<aside class="notes">
+
+						</aside>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h1>Control Plane Components</h1>
+					</section>
+					<section>
+						<h3>What is a control plane?</h3>
+						<img src="k8sassets/Kubernetes-Control-Plane-Chart.png" alt="Control Plane">
+						<aside class="notes">
+							A control plane is the container orchestration layer, where the management of the cluster occurs. Typically, this is on a separate machine or VM, and user containers are not run on the control plane. For example, when you interface with a cluster via `kubectl`, you are making HTTP requests to the API server.
+						</aside>
+					</section>
+					<section>
+						<h3>kube-apiserver</h3>
+						<p>The API server is the frontend for the k8s control plane, and is what is used to interface with the rest of the cluster.</p>
+					</section>
+					<section>
+						<h3>etcd</h3>
+					</section>
+					<section>
+						<h3>kube-scheduler</h3>
+					</section>
+					<section>
+						<h3>kube-controller-manager</h3>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h1>Node Components</h1>
+					</section>
+					<section>
+						<h3>What is a node?</h3>
+					</section>
+					<section>
+						<h3>kubelet</h3>
+					</section>
+					<section>
+						<h3>kube-proxy</h3>
+					</section>
+					<section>
+						<h3>container runtime</h3>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h3>Namespaces</h3>
+					</section>
+					<section>
+						<h3>Pods</h3>
+					</section>
+					<section>
+						<h3>Deployments</h3>
+					</section>
+					<section>
+						<h3>Services</h3>
+					</section>
+				</section>
+				<section>
+					This is done by using a simple, declarative model for describing the desired state of the cluster.
+					<pre><code data-trim data-noescape data-line-numbers>
+						$ kubectl apply -f changes.yaml
+					</code></pre>
+					<aside class="notes">
+						Instead of directly making changes via the command line, or on a web interface, changes are applied in the form of YAML files. This applies to every kind of change that you could make on a cluster. Deployments, access control, networking settings; any of these are changed via a YAML file.
+					</aside>
+				</section>
+				
 
                 <section>
                     <h3>Sources:</h3>
