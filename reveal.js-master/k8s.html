@@ -63,12 +63,24 @@
 					</section>
 					<section>
 						<h3>etcd</h3>
+						<img src="k8sassets/etcd.svg" alt="etcd">
+						<aside class="notes">
+							etcd is a distributed key-value store, and is used to store the cluster's state and configuration information.
+						</aside>
 					</section>
 					<section>
 						<h3>kube-scheduler</h3>
+						<img src="k8sassets/kube-scheduler.png" alt="kube-scheduler">
+						<aside class="notes">
+							The scheduler is responsible for assigning pods to nodes. It is also responsible for managing the cluster's load balancing. The scheduler takes into account resource requirements, policy contraints, data locality, and deadlines. 
+						</aside>
 					</section>
 					<section>
 						<h3>kube-controller-manager</h3>
+						<img src="k8sassets/kube-controller-manager.png" alt="kube-controller-manager">
+						<aside class="notes">
+							The controller manager is responsible for managing the cluster's state and configuration. It is responsible for managing the cluster's services, pods, and other resources. There are several types of controllers, including node controllers, job controllers, endpoint controllers, and service account & token controllers. 
+						</aside>
 					</section>
 				</section>
 				<section>
@@ -77,12 +89,24 @@
 					</section>
 					<section>
 						<h3>What is a node?</h3>
+						<img src="k8sassets/k8s-node.png" alt="Node">
+						<aside class="notes">
+							A node is a server or VM that is part of a k8s cluster. Nodes are the underlying hardware that pods are run on, and are controlled by the control plane. 
+						</aside>
 					</section>
 					<section>
 						<h3>kubelet</h3>
+						<img src="k8sassets/kube-controller-manager.png" alt="kube-controller-manager">
+						<aside class="notes">
+							The kubelet is the agent that runs on each node and is responsible for managing the node's containers. The kubelet handles requests from the API server by responding to PodSpecs and ensuring that the containers described in those specs are running and healthy. 
+						</aside>
 					</section>
 					<section>
 						<h3>kube-proxy</h3>
+						<img src="k8sassets/kube-controller-manager.png" alt="kube-controller-manager">
+						<aside class="notes">
+							The kube-proxy maintains network rules on nodes, which coordinate communication between individual pods and the rest of the cluster. The kube-proxy can also be used to interface with your cluster from a computer that is not a part of the cluster by forwarding traffic. 
+						</aside>
 					</section>
 					<section>
 						<h3>container runtime</h3>
@@ -116,6 +140,12 @@
                 <section>
                     <h3>Sources:</h3>
                     <ul>
+						<li>https://kubernetes.io/docs/</li>
+						<li>https://collabnix.com/a-quick-look-at-the-kubernetes-api-concepts/</li>
+						<li>https://www.educba.com/kubernetes-control-plane/</li>
+						<li>https://learnk8s.io/etcd-kubernetes</li>
+						<li>https://www.sobyte.net/post/2022-03/how-kubernetes-controller-manager-works/</li>
+						<li>https://matthewpalmer.net/kubernetes-app-developer/articles/kubernetes-networking-guide-beginners.html</li>
                     </ul>
                 </section>
                 
