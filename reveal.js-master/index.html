@@ -62,9 +62,12 @@
 						<h3>First commit</h3>
 						<pre><code  data-trim data-noescape data-line-numbers>
 							$ echo "Hello git!" >> hello.txt	# Write text to a file
+							$ git status
 							$ git add hello.txt					# Track file for commit
+							$ git status
 							$ git commit 						# Commit all tracked files 
 							$ git status						# Print the current status 
+							$ git log							# Print the commit history
 						</code></pre>
 						<p style="font-size: 0.7em">Run git status at different points in this exercise to see the different stages of a git workflow!</p>
 					</section>
@@ -83,9 +86,10 @@
 							$ echo "Whoops, forgot this one" > forgor.txt
 							$ git add forgor.txt
 							$ git commit --amend -m "Added forgor.txt and hello.txt"
+							$ git log
 						</code></pre>
 						<aside class="notes">
-							Amend adds additional files to a commit, and can also update the commit message
+							Amend adds additional files to a commit, and can also update the commit message. Notice how in the final 'git log' command, the commit message is updated.
 						</aside>
 					</section>
 					<section>
@@ -119,50 +123,48 @@
 					</section>
 					<section>
 						<h3>Reverting changes after committing</h3>
+						Show a log of commits you can revert to:
+						<pre><code  data-trim data-noescape>
+							$ git reflog
+						</code></pre>
 						Revert public changes:
 						<pre><code  data-trim data-noescape>
 							$ git revert &#60;SHA&#62;
-						</code></pre>
-						Fix commit message typo:
-						<pre><code  data-trim data-noescape>
-							$ git commit --amend -m "&#60;Updated message&#62;"
 						</code></pre>
 						Undo local changes:
 						<pre><code  data-trim data-noescape>
 							$ git checkout -- &#60;bad filename&#62;
 						</code></pre>
-						Reset local changes:
+						To recreate one or more files as they were at that time without altering history:
 						<pre><code  data-trim data-noescape>
-							$ git reset &#60;last good SHA&#62; 		#safe
-							or
-							$ git reset --hard &#60;last good SHA&#62;	#unsafe
+							$ git checkout &#60;SHA&#62; -- &#60;filename&#62;
 						</code></pre>
+						<aside class="notes">
+							git reflog shows a list of all commits you've made, and allows you to revert to any of them. The difference between git reflog and git log is that git log sometimes compacts some elements of your commit history, such as --amends, whereas git reflog breaks those out into (inital) and (amended) versions, as you can see in our commit history. Revert is the most common way to undo changes. It's also the safest way to undo changes. Delete hello.txt. In this case, we're undoing the last commit. Try running 'git log' to see what the last commit was. Next, run 'git revert' to undo the last commit.'git checkout --' is a safe way to undo local changes, similar to 'git restore'. Try making changes to hello.txt, not commiting them, and using git checkout -- hello.txt to revert those changes. 
+						</aside>
 					</section>
 					<section>
 						<h3>Reverting changes after committing (cont.)</h3>
-						Show a log of commits you can revert to:
-						<pre><code  data-trim data-noescape>
-							$ git reflog
-						</code></pre>
 						to restore project history to commit "moment in time":
 						<pre><code  data-trim data-noescape>
-							$ git reset --hard &#60;SHA&#62;
-						</code></pre>
-						to recreate one or more files as they were at that time without altering history:
-						<pre><code  data-trim data-noescape>
-							$ git checkout &#60;SHA&#62; -- &#60;filename&#62;
+							$ git reset &#60;last good SHA&#62; 		#safe
+							or
+							$ git reset --hard &#60;SHA&#62;			#unsafe
 						</code></pre>
 						to replay exactly one of those commits into branch:
 						<pre><code  data-trim data-noescape>
 							$ git cherry-pick &#60;SHA&#62;
 						</code></pre>
+						<aside class="notes">
+							'git reset' is an unsafe way to undo local changes. It forcibly resets the git history to the given SHA, disregarding changes since then. 						
+						</aside>
 					</section>
 					<section>
 						<h3>Fun with git cherry-pick</h3>
 						<ul>
 							<li>In my opinion, git cherry-pick is one of the most powerful git commands.</li>
 							<li>It can be used across branches in the same repo, which makes it easier to pull individual features or changes across your project</li>
-							<li>Super helpful for package development.</li>
+							<li>Super helpful for working with interdependent branches or large teams.</li>
 						</ul>
 						<aside class="notes">
 							Talk about RC workflow here
@@ -177,13 +179,13 @@
 						<h3>Intro to branches</h3>
 						<img src="gitassets/commits.png"/>
 						<aside class="notes">
-							Branches are useful when you have multiple versions of a project that you want to work on simultaneously, like a develop, prod, and testing branch. GIVE RC EXAMPLE
+							Branches are useful when you have multiple versions of a project that you want to work on simultaneously, like a develop, prod, and testing branch.
 						</aside>
 					</section>
 					<section>
 						<img src="gitassets/commit-history.png"/>
 						<aside class="notes">
-							GIT AS POINTERS AND LINKS
+							Explain git pointers
 						</aside>
 					</section>
 					<section>
@@ -228,7 +230,7 @@
 						<h3>More branching</h3>
 						<img src="gitassets/basic-branching-6.png"/>
 					</section>
-					<section>
+					<section data-background-color="teal">
 						<h3>Merging</h3>
 						<pre><code  data-trim data-noescape data-line-numbers>
 							$ git checkout master
@@ -263,9 +265,10 @@
 							$ git commit
 							$ git checkout master
 							$ vim hello.txt
-							# Change hello.txt
+							# Change hello.txt in a different way
+							# commit those changes
 							# We now have divergent history and a merge conflict
-							$ git log --graph --all
+							$ git log --graph --all --oneline
 							$ git merge newbranch
 						</code></pre>
 						You should now have a merge conflict
@@ -279,15 +282,10 @@
 							# Resolve the conflicts
 							$ git add .
 							$ git commit -m "Resolved merge conflicts"
-						</code></pre>
-						Merge conflict resolved!
-					</section>
-					<section>
-						<h3>Resolving merge conflicts (cont.)</h3>
-						<pre><code  data-trim data-noescape data-line-numbers>
 							$ git status 
 							$ git log --all --graph
 						</code></pre>
+						Merge conflict resolved!
 					</section>
 				</section>
 				<section>
@@ -321,20 +319,25 @@
 							$ git rebase master
 						</code></pre>
 						<img src="gitassets/basic-rebase-3.png"/>
+						<aside class="notes">
+							Instead of creating one new commit that points at both histories, git rebase rewrites history and makes it look as if all commits occured on the master branch, leaving a clean branch history. Rebase has more usage than just this, which I'll go into in the next slide. 
+						</aside>
+					</section>
+					<section>
+						<h3> Basic Rebasing (cont.)</h3>
 						<pre><code  data-trim data-noescape data-line-numbers>
 							$ git checkout master
 							$ git merge experiment
 						</code></pre>
 						<img src="gitassets/basic-rebase-4.png"/>
 						<p>Rebase & Merge</p>
-						<aside class="notes">
-							Instead of creating one new commit that points at both histories, git rebase rewrites history and makes it look as if all commits occured on the master branch, leaving a clean branch history. Rebase has more usage than just this, which I'll go into in the next slide. 
-						</aside>
 					</section>
 					<section>
 						<h3>Complex Rebasing</h3>
 						<img src="gitassets/interesting-rebase-1.png"/>
-						<p>You have worked on client and server patches at different times, and need to apply client patches to master prior to overlaying server patches. </p>
+						<aside class="notes">
+							You have worked on client and server patches at different times, and need to apply client patches to master prior to overlaying server patches. 
+						</aside>
 					</section>
 					<section>
 						<h3>Rebase client to master</h3>
@@ -404,7 +407,7 @@
 						<!-- <p>Fork https://github.com/viv-codes/example on GitHub</p> -->
 						<pre><code  data-trim data-noescape data-line-numbers>
 							$ cd ~
-							$ git clone https://github.com/user.name/reponame
+							$ git clone https://github.com/username/reponame
 							$ cd reponame										
 						</code></pre>
 					</section>
@@ -507,12 +510,30 @@
 						<pre><code  data-trim data-noescape>
 							Update>> 1,2	# stages TODO and index.htm
 						</code></pre>
-						<p>Git interactive can also be used for more powerful operations, like staging certain parts of commits. However, that is out of the scope of this presentation. </p>
+						<aside class="notes">
+							Git interactive can also be used for more powerful operations, like staging certain parts of commits.
+						</aside>
 					</section>
 					<section>
 						<h3>Debugging with git</h3>
 						<pre><code  data-trim data-noescape>
 							$ git blame -L 69, 82 Makefile # Runs git blame for lines 69-82
+						</code></pre>
+					</section>
+					<section>
+						<h3>Git rebase interactive</h3>
+						<pre><code data-trim data-noescape>
+							git rebase -i &#60;SHA&#62;
+
+							pick 32e93fa Deleted hello.txt
+							squash af6241e Revert "Deleted hello.txt"
+							pick a9464ed Testing checkout
+							squash b8fcc07 Revert "Testing checkout"
+							pick c9a18a8 Scrambled hello.txt
+							reword cd1a2cc hello.txt
+							pick c26da1a Created divergent history
+							pick d76c8f4 Updated hello.txt
+
 						</code></pre>
 					</section>
 				</section>
