@@ -543,14 +543,14 @@
 					</section>
 					<section>
 						<h3>Structure of .git directory</h3>
-						<pre><code  data-trim data-noescape>
-							[vivi@vivi-thinkpad filesort]$ cd .git && ls
-							branches        description  hooks  logs       packed-refs
-							COMMIT_EDITMSG  FETCH_HEAD   index  objects    refs
-							config          HEAD         info   ORIG_HEAD
-						</code></pre>
+						<img src="gitassets/gitfolder.png" alt="git folder structure">
 						<aside class="notes">
-							Ok, so there are a lot here. We're going to go in detail into each of these, but here's a brief description. The description file is only used by GitWeb, so don't worry about that one. The config file contains your project-specific configuration options. [OPEN IT] The info directory contains a global exclude pattern, if you want something more global than a .gitignore. The hooks directory contains client- and server- side hooks. HEAD points to the branch and commit that you currently have checked out. The index file is where git stores your staging area info.  The objects directory stores all of the content for your database, refs stores pointers into commit objects in the data in objects. 
+							The config file contains your project-specific configuration options.
+							The info directory contains a global exclude pattern, if you want something more global than a .gitignore. 
+							The hooks directory contains client- and server- side hooks. HEAD points to the branch and commit that you currently have checked out. 
+							The index file is where git stores your staging area info.  
+							The objects directory stores all of the content for your database, refs stores pointers into commit objects in the data in objects. 
+							The description file is only used by GitWeb, so don't worry about that one. 
 						</aside>
 					</section>
 					<section>
