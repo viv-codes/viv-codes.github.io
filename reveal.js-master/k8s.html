@@ -10,9 +10,6 @@
 		<link rel="stylesheet" href="dist/reveal.css">
 		<link rel="stylesheet" href="dist/theme/moon.css">
 		<link rel="stylesheet" href="plugin/highlight/monokai.css">
-
-
-
 	</head>
 	<body>
 		<div class="reveal">
@@ -68,7 +65,7 @@
 							etcd is a distributed key-value store, and is used to store the cluster's state and configuration information.
 						</aside>
 					</section>
-					<section>
+					<section data-background-color="teal">
 						<h3>kube-scheduler</h3>
 						<img src="k8sassets/kube-scheduler.png" alt="kube-scheduler">
 						<aside class="notes">
@@ -93,7 +90,93 @@
 							-----------------------------The kube-proxy maintains network rules on nodes, which coordinate communication between individual pods and the rest of the cluster. The kube-proxy can also be used to interface with your cluster from a computer that is not a part of the cluster by forwarding traffic. 
 						</aside>
 					</section>
+					<section data-background-color="teal">
+						<h3>Pods</h3>
+						<img src="k8sassets/pods.png" alt="pods">
+						<aside class="notes">
+							Pods are the smallest deployable units of computing that you can create and manage in k8s. 
+						</aside>
+					</section>
 				</section>
+
+				<section>
+					<section>
+						<img src="k8sassets/deployment-diagram-kubernetes.gif" alt="deployment-diagram-kubernetes">
+						<aside class="notes">
+							Deployments are kubernetes objects that allow you to interact with pods. A deployment states the desired state of the cluster, and the kubernetes system will ensure that the pods are running in the desired state.
+						</aside>
+					</section>
+					<section>
+						<h3>Example of a deployment</h3>
+						<pre><code data-trim data-noescape data-line-numbers>
+							apiVersion: apps/v1
+							kind: Deployment
+							metadata:
+							  name: nginx-deployment
+							  labels:
+								app: nginx
+							spec:
+							  replicas: 3
+							  selector:
+								matchLabels:
+								  app: nginx
+							  template:
+								metadata:
+								  labels:
+									app: nginx
+								spec:
+								  containers:
+								  - name: nginx
+									image: nginx:1.14.2
+									ports:
+									- containerPort: 80
+						</code></pre>
+
+					</section>
+					<section>
+						Deployments (and other changes) are made by using a simple, declarative model for describing the desired state of the cluster.
+						<pre><code data-trim data-noescape data-line-numbers>
+							$ kubectl apply -f changes.yaml
+						</code></pre>
+						<aside class="notes">
+							Instead of directly making changes via the command line, or on a web interface, changes are applied in the form of YAML files. This applies to every kind of change that you could make on a cluster. Deployments, access control, networking settings; any of these are changed via a YAML file.
+						</aside>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h3>Services</h3>
+						<img src="k8sassets/service-vs-deployment.png" alt="service-vs-deployment">
+						<aside class="notes">
+							Services are the way that you expose deployments to the outside world. Services are used to expose ports on your pods, that can then be accessed from outside the cluster. Similar to deployments, services in kubernetes are defined declaratively, by stating what state you want the cluster to be in.
+						</aside>
+					</section>
+					<section>
+						<h4>Example of a service</h4>
+						<pre><code data-trim data-noescape data-line-numbers>
+							apiVersion: v1
+							kind: Service
+							metadata:
+							  name: my-service
+							spec:
+							  selector:
+								app.kubernetes.io/name: MyApp
+							  ports:
+								- protocol: TCP
+								  port: 80
+								  targetPort: 9376
+						</code></pre>
+					</section>
+					<section>
+						<h4>Using services in kubernetes</h4>
+						<pre><code data-trim data-noescape data-line-numbers>
+							$ kubectl apply -f service.yaml
+							$ 
+						</code></pre>
+					</section>
+				</section>
+				
+				
 				<section>
 					<section>
 						<h3>Namespaces</h3>
@@ -122,31 +205,15 @@
 							kubectl get pods --namespace=my-namespace
 						</code></pre>
 					</section>
-					<section data-background-color="teal">
-						<h3>Pods</h3>
-						<img src="k8sassets/pods.png" alt="pods">
-						<aside class="notes">
-							Pods are the smallest deployable units of computing that you can create and manage in k8s. 
-						</aside>
-					</section>
-					<section>
-						<h3>Deployments</h3>
-					</section>
-					<section>
-						<h3>Services</h3>
-					</section>
-					<section>
-						<h3>Workloads</h3>
-					</section>
 				</section>
 				<section>
-					This is done by using a simple, declarative model for describing the desired state of the cluster.
-					<pre><code data-trim data-noescape data-line-numbers>
-						$ kubectl apply -f changes.yaml
-					</code></pre>
-					<aside class="notes">
-						Instead of directly making changes via the command line, or on a web interface, changes are applied in the form of YAML files. This applies to every kind of change that you could make on a cluster. Deployments, access control, networking settings; any of these are changed via a YAML file.
-					</aside>
+					<h3>Workloads</h3>
+				</section>
+
+				<section>
+					<section>
+						<h3>Controlling and interacting with a cluster</h3>
+					</section>
 				</section>
 				
 
@@ -160,6 +227,7 @@
 						<li>https://www.sobyte.net/post/2022-03/how-kubernetes-controller-manager-works/</li>
 						<li>https://matthewpalmer.net/kubernetes-app-developer/articles/kubernetes-networking-guide-beginners.html</li>
 						<li>https://www.weave.works/blog/optimizing-cluster-resources-for-kubernetes-team-development</li>
+						<li>https://matthewpalmer.net/kubernetes-app-developer/articles/kubernetes-deployment-tutorial-example-yaml.html</li>
                     </ul>
                 </section>
                 
