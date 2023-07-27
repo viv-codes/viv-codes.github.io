@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Intro to HPC and Supercomputing</title>
+
+        <link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/moon.css">
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-background-image="k8sassets/k8s-banner.jpg">
+                    <h2 style="font-size: 3.6em;">Intro to HPC and Supercomputing</h2>
+                    <p>Vivian Hafener</p>
+                </section>
+                <section>
+                    <h3>Term clarification: HPC vs Supercomputing</h1>
+                    <p>"High-performance computing (HPC) is the use of supercomputers and parallel computing techniques to solve complex computational problems"</p>
+                </section>
+                <section>
+					<section>
+						<h1>Why do we need HPC?</h1>
+					</section>
+                    <section>
+                        <h2>Short answer: science!</h2>
+                    </section>
+                    <section>
+                        <img src="hpcassets/trinitytest.webp">
+                    </section>
+                    <section>
+                        <img src="hpcassets/ocean.jpg">
+                    </section>
+                    <section>
+                        <img src="hpcassets/asteroid_deflect.jpg">
+                    </section>
+                    <section>
+                        <img src="hpcassets/lilfucker.jpg">
+                    </section>
+                    <section>
+                        <img src="hpcassets/inception.jpg">
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>How are supercomputers different from my laptop?</h2>
+                    </section>
+                    <section>
+                        <h2>Scale</h2>
+                        <img src="hpcassets/trinity.jpg">
+                        <aside class="notes">
+                            Solving advanced computational problems and simulations requires immense parallel processing power, much greater than any single system. 
+                        </aside>
+                    </section>
+                    <section>
+                        <h2>Cost</h2>
+                        <img src="hpcassets/frontier.webp">
+                        <aside class="notes">
+                            Frontier here cost Oak Ridge National Lab $600million. At Los Alamos, we just brought in a set of systems totalling around a half million dollars. 
+                        </aside>
+                    </section>
+                    <section>
+                        <h2>Infrastructure</h2>
+                        <img src="hpcassets/highvoltage.jpg">
+                        <aside class="notes">
+                            In addition to having cutting edge, complex nodes, supercomputers require cutting edge facilities. At LANL, our main computing complex uses more power than both surrounding towns. Frontier here uses more power than all of RIT, including our HPC center. 
+                        </aside>
+                    </section>
+                    <section>
+                        <h2>Cooling</h2>
+                        <img src="hpcassets/towerwater.jpg">
+                        <aside class="notes">
+                            In addition to power, these systems require absolutely massive cooling systems. In the floor under these systems are 3-6 foot pipes bringing thousands of gallons of water to and from cooling towers in order to keep these systems cool and running. 
+                        </aside>
+                    </section>
+                    <section>
+                        <h2>Hardware</h2>
+                        <img src="hpcassets/gracehopper.webp">
+                        <aside class="notes">
+                            Due to the high demands of the simulation codes run on HPC machines, many cutting edge supercomputers will use technologies that aren't avaliable to the general market. Grace hopper / venado / ATS
+                        </aside>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>How do supercomputers work?</h2>
+                    </section>
+                    <section>
+                        <p>So, you have some code...</p>
+                        <img src="hpcassets/job.png">
+                    </section>
+                    <section>
+                        <p>then you submit a job...</p>
+                        <img src="hpcassets/basicworkflow.png">
+                    </section>
+                    <section>
+                        <p>then what happens next is...</p>
+                    </section>
+                    <section>
+                        <h1>Scheduling !!!!! :3</h1>
+                    </section>
+                    <section>
+                        <img src="hpcassets/slurm.gif">
+                    </section>
+                    <section>
+                        <p>but before you run, you've usually got to wait in line</p>
+                        <img src="hpcassets/queue.webp">
+                    </section>
+                    <section>
+                        <img src="hpcassets/inception.jpg">
+                    </section>
+                    <section>
+                        <p>This shit rules !!! I love talking about it. If you want to learn more about scheduling shit, PLEASE ask me and we can chat sometime.</p>
+                    </section>
+                    <section>
+                        <p>Until the time comes, and your code is running! on a big-ass computer!</p>
+                        <img src="hpcassets/trinity.jpg">
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <p></p>
+                    </section>
+                </section>
+			
+                <section>
+                    <h3>Sources:</h3>
+                    <ul>
+						
+                    </ul>
+                </section>
+                
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+
+
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
